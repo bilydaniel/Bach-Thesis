@@ -1,0 +1,68 @@
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Sentiment Analytics</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+    <script
+        src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous">
+    </script>
+       
+  </head>
+
+<form action="{% url 'leaderboard' %}" method="POST">{% csrf_token %}
+  <table>
+    <tbody>
+      <tr>
+        <td><label>{{text.order_by}}</label></td>
+        <td><label>{{text.order}}</label></td>
+        <td><label>{{text.limit}}: </label></td>
+      </tr>
+
+      <tr>
+        <td>
+        	<select name="orderby" id="orderby" >
+        		<option value="avg_polarity" {{form_values.avg_polarity_selected}}>{{text.polarity}}</option>
+        		<option value="avg_stars" {{form_values.avg_stars_selected}}>{{text.stars}}</option>
+        		<option value="actors_score" {{form_values.actors_score_selected}}>{{text.actor}}</option>
+        		<option value="story_score" {{form_values.story_score_selected}}>{{text.story}}</option>
+        		<option value="characters_score" {{form_values.characters_score_selected}}>{{text.character}}</option>
+        		<option value="audio_video_score" {{form_values.audio_video_score_selected}}>{{text.audio_video}}</option>
+        		<option value="experience_score" {{form_values.experience_score_selected}}>{{text.experience}}</option>
+            <option value="popularity" {{form_values.popularity_selected}}>{{text.popularity}}</option>
+        	</select>
+        </td>
+        
+        <td>
+          <label for="asc">{{ text.asc }}</label>
+		  <input type="radio" name="order" value="asc" id="asc"required="" {{form_values.asc_checked}}>
+		  |
+		  
+		  <label for="dsc">{{text.dsc}}</label>
+		  <input type="radio" name="order" value="dsc"id="dsc"{{form_values.dsc_checked}}>
+  		</td>
+  <td>
+  <input type="number" name="limit" id="limit"required=""value={{form_values.limit_value}}>
+  </td>
+
+    <td><input type="submit" value="{{ text.button_text }}"></td>
+      </tr>
+    </tbody>  
+
+  </table>
+
+
+
+</form>
+
+<div class="div1">
+{% for result in results %}
+<a href="../movie/{{result.title}}">{{ result.title }}</a>
+<hr>
+<br>
+
+{% endfor %}
+</div>

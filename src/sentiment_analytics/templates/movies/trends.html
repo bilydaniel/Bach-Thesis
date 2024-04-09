@@ -1,0 +1,165 @@
+<div id="chart_container" style="min-width: 310px; height: 400px; margin: 0 auto" class="border"></div>
+<style type="text/css">
+  table td + td { border-left:2px solid black; }
+</style>
+
+<form action="{% url 'trends' %}" method="POST">{% csrf_token %}
+  <table>
+    <tbody>
+      <tr>
+        <td><label>Year from: </label></td>
+        <td><label>Year to: </label></td>
+        <td><label>Popularity by: </label></td>
+      </tr>
+
+      <tr>
+        <td><input type="number" min="1900" max="2099" step="1" name="from" required="" value="{{form_values.date_from}}"></td>
+        <td><input type="number" min="1900" max="2099" step="1" name="to"required=""value="{{form_values.date_to}}"></td>
+      	
+      	<td>
+      		<select name="popularity_by" id="popularity_by" >
+            <option value="movie" {{form_values.movie_selected}}>Movie / Series</option>
+            <option value="genre" {{form_values.genre_selected}}>Genre</option>
+            <option value="country" {{form_values.country_selected}}>Country</option>
+                  
+   </select>
+      	</td>
+  
+
+      </tr>
+    </tbody>  
+
+  </table>
+<input type="submit" value="Draw graph">
+
+
+</form>
+
+
+
+
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/streamgraph.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/annotations.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script>
+      
+      _dates = {{dates|safe}};
+      _classes = {{classes|safe}};
+      var colors = Highcharts.getOptions().colors;
+Highcharts.chart('chart_container', {
+
+    chart: {
+        type: 'streamgraph',
+        marginBottom: 30,
+        zoomType: 'x'
+    },
+
+    // Make sure connected countries have similar colors
+    colors: [
+        colors[0],
+        colors[1],
+        colors[2],
+        colors[3],
+        colors[4],
+        // East Germany, West Germany and Germany
+        Highcharts.color(colors[5]).brighten(0.2).get(),
+        Highcharts.color(colors[5]).brighten(0.1).get(),
+
+        colors[5],
+        colors[6],
+        colors[7],
+        colors[8],
+        colors[9],
+        colors[0],
+        colors[1],
+        colors[3],
+        // Soviet Union, Russia
+        Highcharts.color(colors[2]).brighten(-0.1).get(),
+        Highcharts.color(colors[2]).brighten(-0.2).get(),
+        Highcharts.color(colors[2]).brighten(-0.3).get()
+    ],
+
+    title: {
+        floating: true,
+        align: 'left',
+        text: 'Popularity trends'
+    },
+    subtitle: {
+        floating: true,
+        align: 'left',
+        y: 30,
+        text: ''
+    },
+
+    xAxis: {
+        maxPadding: 0,
+        type: 'category',
+        crosshair: true,
+        categories: _dates,
+        labels: {
+            align: 'left',
+            reserveSpace: false,
+            rotation: 270
+        },
+        lineWidth: 0,
+        margin: 20,
+        tickWidth: 0
+    },
+
+    yAxis: {
+        visible: false,
+        startOnTick: false,
+        endOnTick: false
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    annotations: [],
+
+    plotOptions: {
+        series: {
+            label: {
+                minFontSize: 5,
+                maxFontSize: 15,
+                style: {
+                    color: 'rgba(255,255,255,0.75)'
+                }
+            }
+        }
+    },
+
+    // Data parsed with olympic-medals.node.js
+    series: 
+    [ 
+      {% for key, value in classes.items %}
+        {
+          name: "{{key}}",
+          data: {{value}}
+        },
+
+      {% endfor %}
+
+      {
+        name: "",
+        data: 
+          [
+            
+          ]
+      }
+    ],
+
+    exporting: {
+        sourceWidth: 800,
+        sourceHeight: 600
+    }
+
+});
+      </script>

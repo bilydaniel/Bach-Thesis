@@ -1,0 +1,17 @@
+
+<div class="top-three">
+{% if language == "CZ" %}
+   	<h2>TOP Filmy</h2>
+{% elif language == "EN" %}
+    <h2>TOP Movies</h2>
+{% endif %}
+
+{% for movie in top_movies %}
+	{{ movie.description }}: 
+	<a href="./movie/{{movie.title}}">{{ movie.title }}</a>
+	<br>
+	Average Polarity: {{ movie.avg_polarity }}
+    <hr>
+    <p>
+{% endfor %}
+</div>

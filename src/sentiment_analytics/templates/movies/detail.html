@@ -1,0 +1,181 @@
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Sentiment Analytics</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+    <script
+        src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous">
+    </script>
+       
+  </head>
+
+
+<h1>{{ movie.title }}</h1>
+
+
+<div id="chart_container" style="min-width: 310px; height: 400px; margin: 0 auto" class="border"></div>
+<style type="text/css">
+  table td + td { border-left:2px solid black; }
+</style>
+<form action="./{{movie.title}}" method="POST">{% csrf_token %}
+  <table>
+    <tbody>
+      <tr>
+        <td><label>{{text.from}}</label></td>
+        <td><label>{{text.to}}</label></td>
+        <td><label>{{text.step}}: </label></td>
+        <td><label>{{text.source}}:</label></td>
+      </tr>
+
+      <tr>
+        <td><input type="date" name="from" required="" value="{{form_values.date_from}}"></td>
+        <td><input type="date" name="to"required=""value="{{form_values.date_to}}"></td>
+        <td>
+          <label for="day">{{ text.day }}</label>
+  <input type="radio" name="step_size" value="day" id="day"required="" {{form_values.day_checked}}>
+  |
+  
+  <label for="month">{{text.month}}</label>
+  <input type="radio" name="step_size" value="month"id="month"{{form_values.month_checked}}>
+  |
+
+  <label for="year">{{text.year}}</label>
+  <input type="radio" name="step_size" value="year"id="year"{{form_values.year_checked}}>
+
+</td>
+  <td><label for="original">{{text.original}}</label>
+  <input type="radio" name="source" value="original"id="original"required=""{{form_values.original_checked}}>
+  <label for="analyser">{{text.analyser}}</label>
+  <input type="radio" name="source" value="analyser"id="analyser"{{form_values.analyser_checked}}></td>
+      </tr>
+    </tbody>  
+
+  </table>
+<input type="submit" value="{{ text.button_text }}">
+
+
+</form>
+
+<div id="wrapper">
+  <div id='first'>
+  <h1>{{ text.details }}</h1><br>
+  <u>{{ text.type }}</u>: {{movie_type}}<br>
+  <u>{{ text.popularity }}</u>: {{movie.popularity}}<br>
+  <u>{{ text.genres }}</u>: {{genres}}<br>
+  <u>{{ text.countries }}</u>: {{countries}}<br>
+</div>
+
+<div id='second'>
+  <h1>{{ text.avg_values }}</h1><br>
+  <u>{{ text.avg_rating }}</u>: {{avg_rating}}<br>
+  <u>{{ text.avg_polarity }}</u>: {{movie.avg_polarity}}<br>
+  <u>{{ text.avg_stars }}</u>: {{movie.avg_stars}}<br>
+  <u>{{ text.actors_score }}</u>: {{movie.actors_score}}<br>
+  <u>{{ text.story_score }}</u>: {{movie.story_score}}<br>
+  <u>{{ text.characters_score }}</u>: {{movie.characters_score}}<br>
+  <u>{{ text.audio_video_score }}</u>: {{movie.audio_video_score}}<br>
+  <u>{{ text.experience_score }}</u>: {{movie.experience_score}}<br>
+  <u>{{ text.original_rating }}</u>: {{movie.original_rating}}<br>
+  </div>
+</div>
+
+<div class="div2">
+<form action="./{{movie.title}}" method='POST'>{% csrf_token %}
+
+  <select name="pick_aspect" id="pick_aspect" >
+            <option value="actor" {{form_values.actor_selected}}>{{text.actors_score}}</option>
+            <option value="story" {{form_values.story_selected}}>{{text.story_score}}</option>
+            <option value="character" {{form_values.character_selected}}>{{text.characters_score}}</option>
+            <option value="audio_video" {{form_values.audio_video_selected}}>{{text.characters_score}}</option>
+            <option value="experience" {{form_values.experience_selected}}>{{text.experience_score}}</option>
+             <option value="all" {{form_values.all_selected}}>{{text.all}}</option>
+            
+   </select>
+   
+  <input type="number" name="num_reviews" value="{{review_limit}}">
+<button class='btn-primary' type="submit" name="inc_review_limit">{{ text.filter_reviews }}</button>
+</form>
+</div>
+
+<div class="div2">
+  {% for r in reviews %}
+  {{ r.text }}<br>
+  <u>{{ text.rating }}</u>: {{r.rating}} <br>
+  <u>{{ text.author }}</u>: {{r.critic}} <br>
+  <u>{{ text.date }}</u>: {{r.date}} <br>
+  <u>{{ text.source }}</u>: {{r.source}} <br>
+  <a href="{% url 'review_detail' %}/{{r.id}}">Detail</a>
+  <hr>
+  <br><br>
+
+  {% endfor %}
+</div>
+
+
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script>
+      
+      _dates = {{dates|safe}};
+      Highcharts.chart('chart_container', {
+    chart: {
+              type: 'column'
+    },
+    title: {
+              text: '{{ text.graph_title }}'
+    },
+    subtitle: {
+              text: ''
+    },
+    xAxis: {
+               categories: _dates,
+              crosshair: true
+
+
+    },
+    yAxis: [{
+              min: 0,
+              title: {
+      text: ''
+              }
+    },{
+              min: 0,
+              title: {
+      text: ''
+              }
+    }],
+    tooltip: {
+              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+      '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+              footerFormat: '</table>',
+              shared: true,
+              useHTML: true
+    },
+    plotOptions: {
+              column: {
+      pointPadding: 0.2,
+      borderWidth: 0
+        }
+    },
+    series: [{
+              name: '{{ text.graph_pos }}',
+              data: {{ values_pos }},
+              color:"#02b030"
+
+        
+    },{
+              name: '{{ text.graph_neg }}',
+              data: {{ values_neg }},
+              color:"#db0404"
+        
+    }]
+      });
+      </script>

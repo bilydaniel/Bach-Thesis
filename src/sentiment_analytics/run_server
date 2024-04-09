@@ -1,0 +1,2 @@
+python manage.py runserver 0.0.0.0:8078
+#http://athena1.fit.vutbr.cz:8079/

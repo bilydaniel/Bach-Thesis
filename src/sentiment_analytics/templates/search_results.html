@@ -1,0 +1,24 @@
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Sentiment Analytics</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+    <script
+        src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous">
+    </script>
+       
+  </head>
+
+{% for result in results %}
+<div class="div1">
+<a  href="../movie/{{result.title}}">{{ result.title }}</a>
+<br>
+{{text.popularity}}: {{result.popularity}}
+<hr>
+<br>
+</div>
+{% endfor %}

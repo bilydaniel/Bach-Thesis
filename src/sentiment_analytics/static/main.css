@@ -1,0 +1,31 @@
+.curr_language{
+	border-width:10px;
+}
+
+.top-three {
+     margin-top: 2cm;
+  }
+
+.div1 {
+	margin-left: 2cm;
+  width: 300px;
+}
+#wrapper {
+    width: 700px;
+    margin: auto;
+    overflow: hidden; /* add this to contain floated children */
+}
+#first {
+    width: 300px;
+    float:left; /* add this */
+    
+}
+#second {
+    
+    float: left; /* add this */
+}
+
+.div2{
+	width: 70%;
+	margin: auto;
+}

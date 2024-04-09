@@ -1,0 +1,65 @@
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Sentiment Analytics</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+    <script
+        src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous">
+    </script>
+       
+  </head>
+
+ID: {{id}} <br>
+{{ r.text }}<br>
+{{ text.rating }}: {{r.rating}} <br>
+{{ text.author }}: {{r.critic}} <br>
+{{ text.date }}: {{r.date}} <br>
+{{ text.source }}: {{r.source}} <br>
+<br><br><br>
+
+{% if r.analyzed %}
+	{% if pos_neg.stat_used %}
+	{{text.used}}<br>
+	{% else %}
+	{{text.not_used}}<br>
+	{% endif%}
+<br>
+
+<u>{{text.pol_analyser}}:</u><br>
+{{text.predicted_value}}: {{pos_neg.predicted_value}}<br>
+{{text.predicted_class}}: {{pos_neg.predicted_class}}<br>
+
+<u>{{text.stars_analyser}}:</u><br>
+{{text.onestar_value}}: {{classes_5.one_star}}<br>
+{{text.twostar_value}}: {{classes_5.two_star}}<br>
+{{text.threestar_value}}: {{classes_5.three_star}}<br>
+{{text.fourstar_value}}: {{classes_5.four_star}}<br>
+{{text.fivestar_value}}: {{classes_5.five_star}}<br>
+{{text.final_value}}: {{classes_5.final_rating}}<br>
+
+<u>{{text.aspect_analyser}}:</u><br>
+{{text.actor_pos}}: {{aspects.actor_pos}}<br>
+{{text.actor_neg}}: {{aspects.actor_neg}}<br>
+{{text.audio_video_pos}}: {{aspects.audio_video_pos}}<br>
+{{text.audio_video_neg}}: {{aspects.audio_video_neg}}<br>
+{{text.character_pos}}: {{aspects.character_pos}}<br>
+{{text.character_neg}}: {{aspects.character_neg}}<br>
+{{text.experience_pos}}: {{aspects.experience_pos}}<br>
+{{text.experience_neg}}: {{aspects.experience_neg}}<br>
+{{text.story_pos}}: {{aspects.story_pos}}<br>
+{{text.story_neg}}: {{aspects.story_neg}}<br>
+
+
+
+
+
+
+
+
+{% else %}
+{{ text.not_analysed}}
+{% endif %}
